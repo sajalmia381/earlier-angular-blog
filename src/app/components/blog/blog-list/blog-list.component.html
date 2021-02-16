@@ -1,0 +1,21 @@
+<div class="container-fluid">
+	<div class="row" *ngIf="blogs.length > 0">
+		<div class="col-md-3 mt-4" *ngFor="let blog of blogs">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">{{ blog.title | titlecase | slice: 0:30 }}</h5>
+					<p class="card-text">
+						{{ blog.body | slice: 0:50}}
+					</p>
+					<div class="d-flex">
+						<a href="#" class="btn btn-primary">Read More</a>
+						<button class=" ml-2 btn btn-outline-primary px-4">Edit</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<ng-template class="text-center" #emptyBlog>
+			<h2>No Blog Found!</h2>
+		</ng-template>
+	</div>
+</div>

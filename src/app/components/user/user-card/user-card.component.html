@@ -1,0 +1,9 @@
+<div class="card">
+	<div class="card-body">
+		<h5 class="card-title">{{ user.name }}</h5>
+		<p class="card-text">{{ user.email }}</p>
+		<div class="d-flex">
+			<button (click)="deleteUser(user.id)" class="btn btn-danger">Remove</button>
+		</div>
+	</div>
+</div>

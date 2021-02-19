@@ -1,3 +1,5 @@
+import { Post } from "app/shared/models/Post"
+
 interface Entity {
     id: number
 }
@@ -13,7 +15,7 @@ export class StoreUtility {
     }
 
     //{id: {id: 1, name: "sajal"}} => [{id: 1, name: "Sajal"}, {id: 2, name: "Rose"}]
-    static unnormalize (entities: {[id: number]: Entity}): number[] {
+    static unnormalize (entities: {[id: number]: Entity}): Post[] {
         if (!entities) {
             return []
         }

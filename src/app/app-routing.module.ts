@@ -18,6 +18,10 @@ const routes: Routes = [
     {
         path: "",
         loadChildren: () => import("./components/ngrx-operator/ngrx-operator.module").then(m => m.NgrxOperatorModule)
+    },
+    {
+        path: "",
+        loadChildren: () => import('./components/contact/contact.module').then(m=>m.ContactModule)
     }
 ];
 

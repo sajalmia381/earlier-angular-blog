@@ -12,6 +12,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { SharedModule } from "./shared/shared.module";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { environment } from "../environments/environment";
+import { ReactiveFormsModule } from "@angular/forms";
 
 
 
@@ -21,6 +22,7 @@ import { environment } from "../environments/environment";
         BrowserModule,
         AppRoutingModule,
         HttpClientModule,
+        ReactiveFormsModule,
         SharedModule,
         NgbModule,
         StoreModule.forRoot(rootReducers),

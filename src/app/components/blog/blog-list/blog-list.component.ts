@@ -1,7 +1,11 @@
+import { BlogUpdateComponent } from './../blog-update.component';
 import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Post } from "app/shared/models/Post";
-import { PostStateService } from "app/shared/services/blog-state.service";
+import { PostsStateService } from "app/shared/services/blogs-state.service";
 import { takeWhile } from "rxjs/operators";
+import { BlogAddComponent } from "../blog-add.component";
 
 @Component({
     selector: "app-blog-list",
@@ -11,10 +15,14 @@ import { takeWhile } from "rxjs/operators";
 export class BlogListComponent implements OnInit, OnDestroy {
     isAlive = true
     blogs: Post[] = [];
-    isLoading = false
-    isError = false
+    isLoading: any = false
+    isError: any = false
+    page = 1
+    pageSize: number = 12
 
-    constructor(private postStateService: PostStateService) {}
+    constructor(private postStateService: PostsStateService, 
+        private router: Router,
+        private modalService: NgbModal) {}
 
     ngOnInit(): void {
         this.fetchData()
@@ -25,14 +33,15 @@ export class BlogListComponent implements OnInit, OnDestroy {
     }
     
     fetchData() {
-        const observer = this.postStateService.getPostList()
-        const entities$ = observer[0]
-        const loading$ = observer[1]
-        const error$ = observer[2]
+        const observer$ = this.postStateService.getPostList()
+        const entities$ = observer$[0]
+        const loading$ = observer$[1]
+        const error$ = observer$[2]
         error$.pipe(takeWhile(() => this.isAlive)).subscribe(data => {
-            console.log(typeof(this.isError))
-            console.log(typeof(data))
-            // this.isError = data
+            this.isError = data
+        })
+        loading$.pipe(takeWhile(() => this.isAlive)).subscribe(data => {
+            this.isLoading = data
         })
         entities$.pipe(takeWhile(() => this.isAlive)).subscribe(data => {
             this.blogs = data
@@ -40,5 +49,23 @@ export class BlogListComponent implements OnInit, OnDestroy {
 
     }
 
+    routeDetails(id) {
+        console.log(id)
+        this.router.navigate(['blog', id])
+    }
     
+
+    changePageSize(e) {
+        this.pageSize = e.target.value
+    }
+
+    openNewPostForm() {
+        this.modalService.open(BlogAddComponent, { size: 'lg' })
+    }
+    updatePostFormModal(post: Post) {
+        console.log(post)
+        const updateModalRef = this.modalService.open(BlogUpdateComponent, { size: 'lg' });
+        updateModalRef.componentInstance.post = post
+
+    }
 }

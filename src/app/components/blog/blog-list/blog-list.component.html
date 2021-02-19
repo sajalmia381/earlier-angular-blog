@@ -1,6 +1,22 @@
 <div class="container-fluid">
-	<div class="row" *ngIf="blogs.length > 0">
-		<div class="col-md-3 mt-4" *ngFor="let blog of blogs">
+	<div class="row" *ngIf="!isLoading && !isError">
+		<div class="col-12">
+			<div class="d-flex justify-content-between align-items-center bg-light py-2">
+				<div class="d-flex align-items-center list-filter">
+					<p class="mb-0">Show</p>
+					<select (change)="changePageSize($event)" [value]="pageSize" class="form-control">
+						<option value="8">8</option>
+						<option value="12">12</option>
+						<option value="16">16</option>
+						<option value="20">20</option>
+						<option value="24">24</option>
+					</select>
+					<p class="mb-0">Post</p>
+				</div>
+				<button class="btn btn-danger btn-sm px-3" (click)="openNewPostForm()">Add Post</button>
+			</div>
+		</div>
+		<div class="col-md-3 mt-4" *ngFor="let blog of blogs | slice: (page-1) * pageSize : page * pageSize">
 			<div class="card">
 				<div class="card-body">
 					<h5 class="card-title">{{ blog.title | titlecase | slice: 0:30 }}</h5>
@@ -8,14 +24,20 @@
 						{{ blog.body | slice: 0:50}}
 					</p>
 					<div class="d-flex">
-						<a href="#" class="btn btn-primary">Read More</a>
-						<button class=" ml-2 btn btn-outline-primary px-4">Edit</button>
+						<button (click)="routeDetails(blog.id)" class="btn btn-primary">Read More</button>
+						<button (click)="updatePostFormModal(blog)" class="ml-2 btn btn-outline-primary px-4">Edit</button>
 					</div>
 				</div>
 			</div>
 		</div>
-		<ng-template class="text-center" #emptyBlog>
+
+		<div class="col-md-12 mt-4">
+			<ngb-pagination class="d-flex justify-content-center" [collectionSize]="blogs.length" [(page)]="page" [pageSize]='pageSize' [boundaryLinks]="true" [rotate]="true" [ellipses]="false"></ngb-pagination>
+		</div>
+		<div *ngIf="blogs.length < 0" class="text-center">
 			<h2>No Blog Found!</h2>
-		</ng-template>
+		</div>
 	</div>
+	<app-loader *ngIf="isLoading"></app-loader>
+	<app-error *ngIf="isError && !isLoading"></app-error>
 </div>

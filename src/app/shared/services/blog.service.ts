@@ -13,6 +13,9 @@ export class BlogService implements OnInit {
     getBlogList() {
         return this.httpService.get("/posts").pipe(map(data => data as Post[]));
     }
+    getBlog (id) {
+        return this.httpService.get(`posts/` + id).pipe(map(data => data as Post))
+    }
     getBlogComment() {
         return this.httpService.get(`/posts/1/comments`).pipe(map(data => data as Comment[]));
     }

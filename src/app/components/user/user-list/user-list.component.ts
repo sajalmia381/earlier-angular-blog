@@ -29,10 +29,10 @@ export class UserListComponent implements OnInit, OnDestroy {
     }
     
     fetchData = () => {
-        const observer = this.repo.getUserList();
-        const loading$ = observer[1];
-        const userData$ = observer[0];
-        const error$ = observer[2]
+        const observer$ = this.repo.getUserList();
+        const loading$ = observer$[1];
+        const userData$ = observer$[0];
+        const error$ = observer$[2]
 
         userData$.pipe(takeWhile(() => this.isAlive)).subscribe(data => {
             this.users = data

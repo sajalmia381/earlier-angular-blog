@@ -1,0 +1,18 @@
+.list-filter {
+    p {
+        color: #5f6490;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+    select {
+        padding: 4px 5px;
+        height: auto;
+        color: var(--danger);
+        margin: 0 10px;
+        box-shadow: none;
+        font-weight: 600;
+        &:focus {
+            outline: none;
+        }
+    }
+}

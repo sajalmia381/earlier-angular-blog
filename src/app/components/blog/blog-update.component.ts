@@ -1,9 +1,11 @@
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Component, Input, OnInit } from '@angular/core';
-import { Post } from 'app/shared/models/Post';
+import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { Component, Input, OnInit } from "@angular/core";
+import { Post } from "app/shared/models/Post";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { PostsStateService } from "app/shared/services/blogs-state.service";
 
 @Component({
-    selector: 'app-blog-update',
+    selector: "app-blog-update",
     template: `
         <div class="modal-header">
             <h4 class="modal-title">Add New Post</h4>
@@ -12,30 +14,60 @@ import { Post } from 'app/shared/models/Post';
             </button>
         </div>
         <div class="modal-body">
-            <form (submit)=onSubmit($event)>
-                <input type="hidden" name="id" value="post.id" />
-                <input type="hidden" name="userId" value="post.userId" />
+            <form [formGroup]="updateFormGroup" (ngSubmit)="onSubmit()">
                 <div class="form-group">
-                    <input [(ngModel)]="post.title" name="title" type="text" class="form-control" id="title" placeholder="Title" required>
+                    <input
+                        [ngClass]="{
+                            'is-invalid': updateFormGroup.get('title').touched && updateFormGroup.get('title').invalid
+                        }"
+                        [formControlName]="'title'"
+                        type="text"
+                        class="form-control"
+                        id="title"
+                        placeholder="Title"
+                        required
+                    />
                 </div>
                 <div class="form-group">
-                    <textarea [(ngModel)]="post.body" name="body" class="form-control" id="body" rows="5" placeholder="Body" required></textarea>
+                    <textarea
+                        [ngClass]="{
+                            'is-invalid': updateFormGroup.get('body').touched && updateFormGroup.get('body').invalid
+                        }"
+                        [formControlName]="'body'"
+                        class="form-control"
+                        id="body"
+                        rows="5"
+                        placeholder="Body"
+                        required
+                    ></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary px-4">Submit</button>
+                <button [disabled]="updateFormGroup.invalid" type="submit" class="btn btn-primary px-4">Update</button>
             </form>
         </div>
     `
 })
-
 export class BlogUpdateComponent implements OnInit {
+    @Input() post: Post;
 
-    @Input() post: Post
+    updateFormGroup: FormGroup;
 
-    constructor(public activeModal:NgbActiveModal) { }
+    constructor(public activeModal: NgbActiveModal, private postStateService: PostsStateService) {}
 
-    ngOnInit() { }
+    ngOnInit() {
+        this.updateFormGroup = new FormGroup({
+            title: new FormControl(this.post.title ? this.post.title : null, [Validators.required]),
+            body: new FormControl(this.post.body ? this.post.body : null, [Validators.required])
+        });
+    }
 
-    onSubmit(e) {
-
+    onSubmit() {
+        if (this.updateFormGroup.invalid) {
+            alert("form not valid");
+            return;
+        }
+        const formData = { ...this.post, ...this.updateFormGroup.value };
+        this.postStateService.updatePost({ ...formData });
+        this.updateFormGroup.reset();
+        this.activeModal.close();
     }
 }

@@ -5,30 +5,33 @@
 	</div>
 	<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
 		<div class="form-group">
-			<input [ngClass]="{'is-invalid': formGroup.get('name').touched && formGroup.get('name').invalid}" formcontrolname="name" type="text" class="form-control" id="name" placeholder="Full Name">
-			<div *ngIf="formGroup.get('name').touched && formGroup.get('name').errors.required">Name is Required</div>
+			<input [ngClass]="{'is-invalid': formGroup.get('name').touched && formGroup.get('name').invalid}" [formControlName]="'name'" type="text" class="form-control" id="name" placeholder="Full Name">
+			<div *ngIf="formGroup.get('name').touched && formGroup.get('name').errors.required" class="invalid-feedback">Name is Required</div>
 		</div>
 		<div class="form-row">
 			<div class="form-group col-md-6">
-				<input formcontrolname="email" type="email" class="form-control" id="email" placeholder="Email">
-				<div *ngIf="formGroup.get('email').touched && !formGroup.get('email').valid">Email is not valid</div>
+				<input [ngClass]="{'is-invalid': formGroup.get('email').touched && formGroup.get('email').invalid}" [formControlName]="'email'" type="email" class="form-control" id="email" placeholder="Email">
+				<div *ngIf="formGroup.get('email').touched && !formGroup.get('email').valid" class="invalid-feedback">Email is not valid</div>
 			</div>
 			<div class="form-group col-md-6">
-				<input formcontrolname="number" type="number" class="form-control" id="number" placeholder="Phone Number">
+				<input [formControlName]="'number'" type="number" class="form-control" id="number" placeholder="Phone Number">
 			</div>
 		</div>
 		<div class="form-group">
-			<textarea formcontrolname="message" rows="4" class="form-control" id="message" placeholder="Your Message"></textarea>
+			<textarea [ngClass]="{'is-invalid':formGroup.get('message').touched && formGroup.get('message').invalid}" [formControlName]="'message'" rows="4" class="form-control" id="message" placeholder="Your Message"></textarea>
+			<div *ngIf="formGroup.get('message').touched && formGroup.get('message').invalid">
+				<div *ngIf="formGroup.get('message').errors.required" class="invalid-feedback d-block">Message Field is required</div>
+				<div *ngIf="formGroup.get('message').errors.minlength" class="invalid-feedback d-block">Message length must be 10 charactars</div>
+			</div>
 		</div>
 		<div class="form-group">
 			<div class="form-check">
-				<input formcontrolname="notRobot" class="form-check-input" type="checkbox" id="notRobot">
+				<input [formControlName]="'notRobot'" class="form-check-input" type="checkbox" id="notRobot">
 				<label class="form-check-label" for="notRobot">
 					I am not Robot
 				</label>
 			</div>
 		</div>
-		{{formGroup.get("name").value}}
 		<button type="submit" class="btn btn-primary px-3">Submit</button>
 	</form>
 </div>
